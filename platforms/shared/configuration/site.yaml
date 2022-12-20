@@ -8,7 +8,7 @@
 #######################################
 # Main Playbook for the setting up and reseting Hyperledger Bevel DLT network
 #######################################
-  - hosts: all
+  - hosts: all  #host - all is used to set variables that will be used for every host that Ansible is ran against
     gather_facts: no
     no_log: "{{ no_ansible_log | default(false) }}"
   # - import_playbook: network-schema-validator.yaml  

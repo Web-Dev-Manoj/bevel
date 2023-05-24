@@ -1,7 +1,7 @@
 The steps are tested on Ubuntu 20.4. The following is the order of steps execution:
 1. Install minikube https://minikube.sigs.k8s.io/docs/start/
 2. Start minikube cluster using the following cmd 
-   minikube start --memory 12000 --cpus 2 --kubernetes-version=1.19.1 --apiserver-ips=20.2.73.167
+   minikube start --memory 12000 --cpus 4 --kubernetes-version=1.19.1 --apiserver-ips=20.2.73.167
 3. The ansible controller talks to minikube and for this communication to happen we need to add a proxy. You can set up yourself based    on your choice of proxy. The kubeconfig file need to use the port opened by this proxy. One option is to setup proxy using following  
    commamd: docker run -d --network minikube -p 18443:18443 chevdor/nginx-minikube-proxy
 This port 18443 needs to be opened on the VM for communication. Please refer article https://www.chevdor.com/post/2021/02/docker_to_k8s/

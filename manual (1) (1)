@@ -2,8 +2,8 @@ The steps are tested on Ubuntu 20.4. The following is the order of steps executi
 1. Install minikube https://minikube.sigs.k8s.io/docs/start/
 2. Start minikube cluster using the following cmd 
    minikube start --memory 12000 --cpus 4 --kubernetes-version=1.19.1 --apiserver-ips=20.2.73.167
-3. The ansible controller talks to minikube and for this communication to happen we need to add a proxy. You can set up yourself based    on your choice of proxy. The kubeconfig file need to use the port opened by this proxy. One option is to setup proxy using following  
-   commamd: docker run -d --network minikube -p 18443:18443 chevdor/nginx-minikube-proxy
+3. The ansible controller talks to minikube and for this communication to happen we need to add a proxy. You can set up yourself based    on your choice of proxy. The kubeconfig file need to use the port opened by this proxy. One option is to setup proxy using following    
+commamd: docker run -d --network minikube -p 18443:18443 chevdor/nginx-minikube-proxy
 This port 18443 needs to be opened on the VM for communication. Please refer article https://www.chevdor.com/post/2021/02/docker_to_k8s/
 4. Setup Hashicorp vault (https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-install)
 5. Open another terminal and start local vault using following command:
@@ -23,33 +23,10 @@ This port 18443 needs to be opened on the VM for communication. Please refer art
 
 After this steps one can run the ansible-playbook to setup Hyperledger Fabric network on minkube.
 
-export VAULT_ADDR=http://52.229.229.54:8200
+export VAULT_ADDR=http://20.2.73.167:8200
 export VAULT_TOKEN=root
 vault secrets enable -version=2 -path=secretsv2 kv
 
-
-sync:
-    comparedTo:
-      destination:
-        namespace: argocd
-        server: https://kubernetes.default.svc
-      source:
-        path: {{ charts_dir }}/peernode
-        repoURL: https://github.com/Karthikey22/bevel.git
-        targetRevision: HEAD
-
-
-syncPolicy:
-   syncOptions:
-   - CreateNamespace=true
-
-kubectl delete hr supplychain-operations-console -n supplychain-net
-kubectl delete hr manufacturer-operations-console -n manufacturer-net
-kubectl delete hr carrier-operations-console -n carrier-net
-
-
-platforms/hyperledger-fabric/charts/operations_console
-
-helm install consoles /home/karthikvm/bevel/platforms/hyperledger-fabric/charts/operations_console
-
-   
+sudo usermod -a -G docker $USER
+sudo groupadd docker && sudo gpasswd -a ${USER} docker && sudo systemctl restart docker
+newgrp docker
